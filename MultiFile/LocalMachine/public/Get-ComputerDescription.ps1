@@ -2,8 +2,10 @@ function Get-ComputerDescription {
     <#
     .SYNOPSIS
         Get description of the computer.
+
     .DESCRIPTION
         Get description of the computer from the registry.
+
     .EXAMPLE
         Get-ComputerDescription
 
@@ -11,11 +13,9 @@ function Get-ComputerDescription {
     #>
 
     [CmdletBinding()]
-    [OutputType([String])]
+    [OutputType([string])]
     param ( )
 
-    $valueInfo = GetRegistryValueInfo
-    if (TestComputerDescriptionValue) {
-        Get-ItemPropertyValue @valueInfo
-    }
+    $getParams = GetRegistryParameter
+    Get-ItemPropertyValue @getParams
 }

@@ -1,25 +1,23 @@
 [DscResource()]
 class ComputerDescription {
-    # Ensure a description is present, or absent.
     [DscProperty(Key)]
-    [Ensure]$Ensure
+    [Ensure] $Ensure
 
-    # The description to set.
     [DscProperty()]
-    [String]$Description
+    [string] $Description
 
     [ComputerDescription] Get() {
-        $currentDescription = Get-ComputerDescription
-        if ($currentDescription) {
+        try {
+            $this.Description = Get-ComputerDescription -ErrorAction Stop
             $this.Ensure = 'Present'
-            $this.Description = $currentDescription
-        } else {
+        } catch {
+            $this.Description = ''
             $this.Ensure = 'Absent'
         }
         return $this
     }
 
-    [Void] Set() {
+    [void] Set() {
         if ($this.Ensure -eq 'Present') {
             Set-ComputerDescription -Description $this.Description
         } else {
@@ -27,13 +25,13 @@ class ComputerDescription {
         }
     }
 
-    [Boolean] Test() {
-        $currentDescription = Get-ComputerDescription
+    [bool] Test() {
+        $currentDescription = Get-ComputerDescription -ErrorAction SilentlyContinue
+
         if ($this.Ensure -eq 'Present') {
-            if (-not $currentDescription) {
+            if ($currentDescription -ne $this.Description) {
                 return $false
             }
-            return $currentDescription -ceq $this.Description
         } else {
             if ($currentDescription) {
                 return $false
