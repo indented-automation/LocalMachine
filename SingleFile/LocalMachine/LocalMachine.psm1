@@ -18,6 +18,16 @@ function Get-ComputerDescription {
     Get-ItemPropertyValue @getParams
 }
 
+function Remove-ComputerDescription {
+    [CmdletBinding(SupportsShouldProcess)]
+    param ( )
+
+    $removeParams = GetRegistryParameter
+    if ($PSCmdlet.ShouldProcess('Removing computer description')) {
+        Remove-ItemProperty @removeParams
+    }
+}
+
 function Set-ComputerDescription {
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([string])]
@@ -47,5 +57,6 @@ function Set-ComputerDescription {
 
 Export-ModuleMember -Function @(
     'Get-ComputerDescription'
+    'Remove-ComputerDescription'
     'Set-ComputerDescription'
 )
